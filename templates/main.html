@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Info_all_to_the_bottom.com</title>
+</head>
+<body>
+    <h1>Информация о интернет-магазине "all_to_the_bottom.com"</h1>
+    <h3 style="margin: 0;">Выберите тип отчета:</h3>
+    <select id="report_selector" onchange="updateReport()" onloadstart="queriesByCountry()">
+        <option>1. Посетители из какой страны совершают больше всего действий на сайте?</option>
+        <option>2. Посетители из какой страны чаще всего интересуются товарами из определенных категорий?</option>
+        <option>3. В какое время суток чаще всего просматривают определенную категорию товаров?</option>
+    </select>
+    <select id="category_selector" onchange="queriesByCountryAndCategory()" hidden="true">
+        <option value="fresh_fish">1. fresh_fish</option>
+        <option value="canned_food">2. canned_food</option>
+        <option value="semi_manufactures">3. semi_manufactures</option>
+        <option value="caviar">4. caviar</option>
+        <option value="frozen_fish">5. frozen_fish</option>
+    </select>
+
+    <p id="tempAns"></p>
+    <script>
+        function updateReport() {
+            var selector = document.getElementById("report_selector");
+            var selectorIndex = selector.selectedIndex;
+            console.log(selectorIndex);
+            document.getElementById("category_selector").hidden = true;
+            switch (selectorIndex) {
+                case 0:
+                    queriesByCountry();
+                    break;
+                case 1:
+                    queriesByCountryAndCategory();
+                    break;
+                case 2:
+                    queriesByDaytimeAndCategory();
+                    break;
+            }
+        }
+        function queriesByCountry() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'getCountryQueries.html');
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                var serverResponse = xhr.responseText;
+                var idAns = document.getElementById("tempAns");
+                idAns.innerText = serverResponse;
+            }
+        }
+        function queriesByCountryAndCategory() {
+            document.getElementById("category_selector").hidden = false;
+            var selector = document.getElementById("category_selector");
+            var selectorValue = selector.value;
+            console.log(selectorValue);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'queriesByCountryAndCategory.html', true);
+            xhr.send(selectorValue);
+            xhr.onreadystatechange = function () {
+                var serverResponse = xhr.responseText;
+                var idAns = document.getElementById("tempAns");
+                idAns.innerText = serverResponse;
+            }
+        }
+        function queriesByDaytimeAndCategory() {
+
+        }
+    </script>
+</body>
+</html>
