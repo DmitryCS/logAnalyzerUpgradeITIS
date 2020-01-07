@@ -177,9 +177,38 @@
             xhr.open('GET', 'queriesPerHour.html');
             xhr.send();
             xhr.onreadystatechange = function () {
-                var serverResponse = xhr.responseText;
-                var idAns = document.getElementById("tempAns");
-                idAns.innerText = serverResponse; //4
+                if (xhr.responseText !== '') {
+                    var serverResponse = JSON.parse(xhr.responseText);
+                    {#var idAns = document.getElementById("tempAns");#}
+                    {#idAns.innerText = serverResponse; //4#}
+
+                    var axisX = [];
+                    var axisY = [];
+                    for (var i = 0; i < serverResponse.length; i++) {
+                        axisY.push(serverResponse[i][0]);
+                        axisX.push(serverResponse[i][1]);
+                    }
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    if(chart)
+                        chart.destroy();
+                    chart = new Chart(ctx, {
+                        // The type of chart we want to create
+                        type: 'bar',
+
+                        // The data for our dataset
+                        data: {
+                            labels: axisY,
+                            datasets: [{
+                                label: 'Количество посетителей за определенный известный час',
+                                backgroundColor: 'blue',
+                                data: axisX
+                            }]
+                        },
+
+                        // Configuration options go here
+                        options: {}
+                    });
+                }
             }
         }
         function categoryWithAnotherCategories() {

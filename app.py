@@ -58,7 +58,7 @@ def queries_by_country_and_category():
 def queries_by_daytime_and_category():
     category = request.data.decode("utf-8")
     s = session.execute('select date from actions where category="{}";'.format(category))
-    data = [datetime.strptime(record[0],'%Y-%m-%d_%H:%M:%S') for record in s]
+    data = [datetime.strptime(record[0], '%Y-%m-%d_%H:%M:%S') for record in s]
     session.close()
     day_time = {'night': 0, 'morning': 0, 'day': 0, 'evening': 0}
     for x in data:
@@ -75,7 +75,20 @@ def queries_by_daytime_and_category():
 
 @app.route('/queriesPerHour.html', methods=['GET'])
 def queries_per_hour():
-    return '4'
+    s = session.execute('select date from actions;')
+    data = [datetime.strptime(record[0], '%Y-%m-%d_%H:%M:%S') for record in s]
+    session.close()
+    mp = dict()
+    for i in data:
+        tt = str(i.year) + ':' + str(i.month) + ':' + str(i.day) + ' - ' + str(1 + i.hour) + ' час'
+        if tt in mp:
+            mp[tt] += 1
+        else:
+            mp[tt] = 1
+    list_country_queries = sorted(mp.items(), key=lambda kv: (kv[0], kv[1]))
+
+    print(list_country_queries[:3])
+    return json.dumps(list_country_queries)
 
 
 @app.route('/categoryWithAnotherCategories.html', methods=['POST'])
