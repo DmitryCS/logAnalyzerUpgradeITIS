@@ -56,7 +56,7 @@ session = sessionmaker(bind=engine)()
 #         country = 'Unknown'
 #     return country
 #  Определение страны по ip-адресу
-def get_country_by_ip(ip_: str) -> str:
+def get_country_by_ip(ip_):
     try:
         country_ = reader.country(ip_).country.name
     except geoip2.errors.AddressNotFoundError:

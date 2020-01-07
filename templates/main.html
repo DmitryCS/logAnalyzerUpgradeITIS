@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>Info_all_to_the_bottom.com</title>
+{#    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>#}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
-<body>
-    <h1>Информация о интернет-магазине "all_to_the_bottom.com"</h1>
+<body onload="updateReport()">
+    <h1 style="margin-top: 0;">Информация о интернет-магазине "all_to_the_bottom.com"</h1>
     <h3 style="margin: 0;">Выберите тип отчета:</h3>
-    <select id="report_selector" onchange="updateReport()" onloadstart="queriesByCountry()">
+    <select id="report_selector" onchange="updateReport()">
         <option>1. Посетители из какой страны совершают больше всего действий на сайте?</option>
         <option>2. Посетители из какой страны чаще всего интересуются товарами из определенных категорий?</option>
         <option>3. В какое время суток чаще всего просматривают определенную категорию товаров?</option>
+        <option>4. Какая нагрузка (число запросов) на сайт за астрономический час?</option>
+        <option>5. Товары из какой категории чаще всего покупают совместно с товаром из заданной категории?</option>
     </select>
-    <select id="category_selector" onchange="queriesByCountryAndCategory()" hidden="true">
+    <select id="category_selector" onchange="updateReport()" hidden="true">
         <option value="fresh_fish">1. fresh_fish</option>
         <option value="canned_food">2. canned_food</option>
         <option value="semi_manufactures">3. semi_manufactures</option>
@@ -21,12 +25,17 @@
     </select>
 
     <p id="tempAns"></p>
+    <canvas id="myChart"></canvas>
     <script>
+        var chart;
         function updateReport() {
+            document.getElementById("category_selector").hidden = true;
+            document.getElementById("tempAns").innerText = '';
             var selector = document.getElementById("report_selector");
             var selectorIndex = selector.selectedIndex;
-            console.log(selectorIndex);
-            document.getElementById("category_selector").hidden = true;
+
+            if(chart)
+                chart.destroy();
             switch (selectorIndex) {
                 case 0:
                     queriesByCountry();
@@ -37,6 +46,12 @@
                 case 2:
                     queriesByDaytimeAndCategory();
                     break;
+                case 3:
+                    queriesPerHour();
+                    break;
+                case 4:
+                    categoryWithAnotherCategories();
+                    break;
             }
         }
         function queriesByCountry() {
@@ -44,9 +59,37 @@
             xhr.open('GET', 'getCountryQueries.html');
             xhr.send();
             xhr.onreadystatechange = function () {
-                var serverResponse = xhr.responseText;
-                var idAns = document.getElementById("tempAns");
-                idAns.innerText = serverResponse;
+                if(xhr.responseText !== ''){
+                    var serverResponse = JSON.parse(xhr.responseText);
+                    {#var idAns = document.getElementById("tempAns");#}
+                    {#idAns.innerText = serverResponse;#}
+                    var axisX = [];
+                    var axisY = [];
+                    for(var i=0; i<serverResponse.length; i++){
+                        axisY.push(serverResponse[i][0]);
+                        axisX.push(serverResponse[i][1]);
+                    }
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    if(chart)
+                        chart.destroy();
+                    chart = new Chart(ctx, {
+                        // The type of chart we want to create
+                        type: 'horizontalBar',
+
+                        // The data for our dataset
+                        data: {
+                            labels: axisY,
+                            datasets: [{
+                                label: 'Количество действий на сайте по странам',
+                                backgroundColor: 'rgb(255, 99, 132)',
+                                data: axisX
+                            }]
+                        },
+
+                        // Configuration options go here
+                        options: {}
+                    });
+                }
             }
         }
         function queriesByCountryAndCategory() {
@@ -58,13 +101,99 @@
             xhr.open('POST', 'queriesByCountryAndCategory.html', true);
             xhr.send(selectorValue);
             xhr.onreadystatechange = function () {
-                var serverResponse = xhr.responseText;
-                var idAns = document.getElementById("tempAns");
-                idAns.innerText = serverResponse;
+                if (xhr.responseText !== ''){
+                    var serverResponse = JSON.parse(xhr.responseText);
+                    {#var idAns = document.getElementById("tempAns");#}
+                    {#idAns.innerText = serverResponse;#}
+                    var axisX = [];
+                    var axisY = [];
+                    for (var i = 0; i < serverResponse.length; i++) {
+                        axisY.push(serverResponse[i][0]);
+                        axisX.push(serverResponse[i][1]);
+                    }
+                    var ctx = document.getElementById('myChart').getContext('2d');
+                    if(chart)
+                        chart.destroy();
+                    chart = new Chart(ctx, {
+                        // The type of chart we want to create
+                        type: 'horizontalBar',
+
+                        // The data for our dataset
+                        data: {
+                            labels: axisY,
+                            datasets: [{
+                                label: 'Количество посетителей категории ' + selectorValue.toString() + ' по странам',
+                                backgroundColor: 'blue',
+                                data: axisX
+                            }]
+                        },
+
+                        // Configuration options go here
+                        options: {}
+                    });
+                }
             }
         }
         function queriesByDaytimeAndCategory() {
+                document.getElementById("category_selector").hidden = false;
+                var selector = document.getElementById("category_selector");
+                var selectorValue = selector.value;
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', 'queriesByDaytimeAndCategory.html', true);
+                xhr.send(selectorValue);
+                xhr.onreadystatechange = function () {
+                    if (xhr.responseText !== '') {
+                        var serverResponse = JSON.parse(xhr.responseText);
+                        /*
+                        var idAns = document.getElementById("tempAns");
+                        idAns.innerText = "Night: " + serverResponse["night"].toString() + "\nMorning: " + serverResponse["morning"]
+                            + "\nDay: " + serverResponse["day"] + "\nEvening: " + serverResponse["evening"];//serverResponse.night + serverResponse.night;
+                         */
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        if (chart)
+                            chart.destroy();
+                        chart = new Chart(ctx, {
+                            // The type of chart we want to create
+                            type: 'doughnut',
 
+                            // The data for our dataset
+                            data: {
+                                labels: ["Night", "Morning", "Day", "Evening"],
+                                datasets: [{
+                                    backgroundColor: ['red','blue', 'orange', 'green'],
+                                    borderColor: 'black',
+                                    data: [serverResponse["night"].toString(), serverResponse["morning"].toString(), serverResponse["day"].toString(), serverResponse["evening"].toString()]
+                                }]
+                            },
+
+                            // Configuration options go here
+                            options: {}
+                        });
+                    }
+                }
+        }
+        function queriesPerHour() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'queriesPerHour.html');
+            xhr.send();
+            xhr.onreadystatechange = function () {
+                var serverResponse = xhr.responseText;
+                var idAns = document.getElementById("tempAns");
+                idAns.innerText = serverResponse; //4
+            }
+        }
+        function categoryWithAnotherCategories() {
+            document.getElementById("category_selector").hidden = false;
+            var selector = document.getElementById("category_selector");
+            var selectorValue = selector.value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'categoryWithAnotherCategories.html', true);
+            xhr.send(selectorValue);
+            xhr.onreadystatechange = function () {
+                var serverResponse = xhr.responseText;
+                var idAns = document.getElementById("tempAns");
+                idAns.innerText = serverResponse; //5
+            };
         }
     </script>
 </body>
