@@ -11,11 +11,11 @@
  <br></b>
 3) flask run:<br>
 * Unix Bash (Linux, Mac, etc.):
-> $ export FLASK_APP=hello <br>
-> $ flask run
+> > $ export FLASK_APP=hello <br>
+> > $ flask run
 * Windows CMD:
-> \> set FLASK_APP=hello <br>
-> \> flask run
+> > \> set FLASK_APP=hello <br>
+> > \> flask run
 4) Web application will be available at http://localhost:5000<br>
 
 # Example of work:
