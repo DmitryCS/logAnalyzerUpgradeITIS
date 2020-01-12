@@ -4,6 +4,7 @@ Requirements:
 2) Python packages:<br>
 <b> Flask<br>
  SQLAlchemy<br>
+ SQLAlchemy-Utils<br>
  geoip2<br></b>
 <br>flask run
 <br>Web application will be available at http://localhost:5000
