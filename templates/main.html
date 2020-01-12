@@ -49,9 +49,9 @@
                 case 3:
                     queriesPerHour();
                     break;
-                case 4:
-                    categoryWithAnotherCategories();
-                    break;
+                {#case 4:#}
+                {#    categoryWithAnotherCategories();#}
+                {#    break;#}
             }
         }
         function queriesByCountry() {
@@ -211,19 +211,20 @@
                 }
             }
         }
-        {#function categoryWithAnotherCategories() {#}
-        {#    document.getElementById("category_selector").hidden = false;#}
-        {#    var selector = document.getElementById("category_selector");#}
-        {#    var selectorValue = selector.value;#}
-        {#    var xhr = new XMLHttpRequest();#}
-        {#    xhr.open('POST', 'categoryWithAnotherCategories.html', true);#}
-        {#    xhr.send(selectorValue);#}
-        {#    xhr.onreadystatechange = function () {#}
-        {#        var serverResponse = xhr.responseText;#}
-        {#        var idAns = document.getElementById("tempAns");#}
-        {#        idAns.innerText = serverResponse; //5#}
-        {#    };#}
-        {#}#}
+   /*     function categoryWithAnotherCategories() {
+            document.getElementById("category_selector").hidden = false;
+            var selector = document.getElementById("category_selector");
+            var selectorValue = selector.value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'categoryWithAnotherCategories.html', true);
+            xhr.send(selectorValue);
+            xhr.onreadystatechange = function () {
+                var serverResponse = xhr.responseText;
+                var idAns = document.getElementById("tempAns");
+                idAns.innerText = serverResponse; //5
+            };
+        }
+    */
     </script>
 </body>
 </html>
