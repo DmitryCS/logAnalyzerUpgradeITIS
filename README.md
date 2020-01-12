@@ -1,7 +1,7 @@
 # logAnalyzerUpgradeITIS
-<h2>Requirements:</h2>
+Requirements:
 1) Python3.5+<br>
-2) Python packages:<b>
+2) Python packages:<br><b>
  * Flask<br>
  * SQLAlchemy<br>
  * SQLAlchemy-Utils<br>
