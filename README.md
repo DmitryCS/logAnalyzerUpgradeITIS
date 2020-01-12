@@ -2,9 +2,9 @@
 <h2>Requirements:</h2>
 1) Python3.5+<br>
 2) Python packages:<br><b>
-  - Flask<br>
-  - SQLAlchemy<br>
-  - SQLAlchemy-Utils<br>
+  - Flask
+  - SQLAlchemy
+  - SQLAlchemy-Utils
   - geoip2
  <br></b>
 3) flask run<br>
