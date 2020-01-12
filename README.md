@@ -1,11 +1,11 @@
 # logAnalyzerUpgradeITIS
 <h2>Requirements:</h2>
 1) Python3.5+<br>
-2) Python packages:<br><b>
-  - Flask
-  - SQLAlchemy
-  - SQLAlchemy-Utils
-  - geoip2
+2) Python packages:<b>
+ * Flask<br>
+ * SQLAlchemy<br>
+ * SQLAlchemy-Utils<br>
+ * geoip2
  <br></b>
 3) flask run<br>
 4) Web application will be available at http://localhost:5000<br>
