@@ -14,7 +14,7 @@
         <option>2. Посетители из какой страны чаще всего интересуются товарами из определенных категорий?</option>
         <option>3. В какое время суток чаще всего просматривают определенную категорию товаров?</option>
         <option>4. Какая нагрузка (число запросов) на сайт за астрономический час?</option>
-        <option>5. Товары из какой категории чаще всего покупают совместно с товаром из заданной категории?</option>
+{#        <option>5. Товары из какой категории чаще всего покупают совместно с товаром из заданной категории?</option>#}
     </select>
     <select id="category_selector" onchange="updateReport()" hidden="true">
         <option value="fresh_fish">1. fresh_fish</option>
@@ -211,19 +211,19 @@
                 }
             }
         }
-        function categoryWithAnotherCategories() {
-            document.getElementById("category_selector").hidden = false;
-            var selector = document.getElementById("category_selector");
-            var selectorValue = selector.value;
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'categoryWithAnotherCategories.html', true);
-            xhr.send(selectorValue);
-            xhr.onreadystatechange = function () {
-                var serverResponse = xhr.responseText;
-                var idAns = document.getElementById("tempAns");
-                idAns.innerText = serverResponse; //5
-            };
-        }
+        {#function categoryWithAnotherCategories() {#}
+        {#    document.getElementById("category_selector").hidden = false;#}
+        {#    var selector = document.getElementById("category_selector");#}
+        {#    var selectorValue = selector.value;#}
+        {#    var xhr = new XMLHttpRequest();#}
+        {#    xhr.open('POST', 'categoryWithAnotherCategories.html', true);#}
+        {#    xhr.send(selectorValue);#}
+        {#    xhr.onreadystatechange = function () {#}
+        {#        var serverResponse = xhr.responseText;#}
+        {#        var idAns = document.getElementById("tempAns");#}
+        {#        idAns.innerText = serverResponse; //5#}
+        {#    };#}
+        {#}#}
     </script>
 </body>
 </html>

@@ -21,7 +21,6 @@ def get_country_queries():
     s = session.execute("select country from actions;")
     data = [record[0] for record in s]
     session.close()
-    print(data[:10])
     mp = dict()
     for x in data:
         if x in mp:
@@ -29,6 +28,7 @@ def get_country_queries():
         else:
             mp[x] = 1
     list_country_queries = sorted(mp.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
+
     return json.dumps(list_country_queries)
 
 
@@ -38,19 +38,14 @@ def queries_by_country_and_category():
     s = session.execute('select country from actions where category="{}";'.format(category))
     data = [record[0] for record in s]
     session.close()
-    print(len(data))
-    print(data[:10])
     mp = dict()
     for x in data:
         if x in mp:
             mp[x] += 1
         else:
             mp[x] = 1
-    print(len(mp))
-    print(mp)
     list_country_queries = sorted(mp.items(), key=lambda kv: (kv[1], kv[0]), reverse=True)
 
-    print(list_country_queries[:3])
     return json.dumps(list_country_queries)
 
 
@@ -87,15 +82,14 @@ def queries_per_hour():
             mp[tt] = 1
     list_country_queries = sorted(mp.items(), key=lambda kv: (kv[0], kv[1]))
 
-    print(list_country_queries[:3])
     return json.dumps(list_country_queries)
 
 
-@app.route('/categoryWithAnotherCategories.html', methods=['POST'])
-def category_with_another_categories():
-    category = request.data.decode("utf-8")
-    #s = session.execute('select date from actions where category="{}";'.format(category))
-    return '5'
+# @app.route('/categoryWithAnotherCategories.html', methods=['POST'])
+# def category_with_another_categories():
+#     category = request.data.decode("utf-8")
+#     #s = session.execute('select category from actions where category="{}";'.format(category))
+#     return '5'
 
 
 if __name__ == '__main__':
