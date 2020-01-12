@@ -101,7 +101,9 @@ with open("logs.txt") as f:
             act.product = product
             #print(section, product)
 
-        engine.echo = False
         session.add(act)
-        session.commit()
-        session.close()
+
+    engine.echo = False  #comment this to see logs about inserting records to database
+    session.commit()
+    session.close()
+    print("Файл считан / Данные добавлены в базу данных.")
