@@ -1,7 +1,7 @@
 # logAnalyzerUpgradeITIS
-Install and Run
-1) Install Python3.5+ and Pip
-2) Install required Python packages:<br>
+Requirements:
+1) Python3.5+
+2) Python packages:<br>
 <b> Flask<br>
  SQLAlchemy<br>
  geoip2<br></b>
