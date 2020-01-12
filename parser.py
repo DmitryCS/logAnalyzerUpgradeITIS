@@ -7,10 +7,8 @@ import geoip2.database
 import geoip2.errors
 from sqlalchemy_utils.functions import drop_database
 
-#DATABASE_NAME = 'database.sqlite3'
+
 reader = geoip2.database.Reader('GeoLite2-Country.mmdb')
-
-
 
 engine = create_engine('sqlite:///all_to_the_bottom.db', echo=True)
 drop_database(engine.url)
@@ -47,13 +45,6 @@ Base.metadata.create_all(engine)
 session = sessionmaker(bind=engine)()
 
 
-# def get_country_by_ip(ex_ip):
-#     print(ex_ip)
-#     try:
-#         country = DbIpCity.get(ex_ip, api_key='free').city
-#     except:
-#         country = 'Unknown'
-#     return country
 #  Определение страны по ip-адресу
 def get_country_by_ip(ip_):
     try:
@@ -64,21 +55,23 @@ def get_country_by_ip(ip_):
     return str(country_)
 
 
-dates = []
-ips = []
-ipp = set()
+# dates = []
+# ips = []
+# ipp = set()
+
 with open("logs.txt") as f:
     for line in f:
         act = Action()
         date = re.search(r'\d+-\d+-\d+', line).group()
         time = re.search(r'\d+:\d+:\d+', line).group()
         full_date = date+'_'+time
-        dates.append(datetime.strptime(full_date, '%Y-%m-%d_%H:%M:%S'))
+        #dates.append(datetime.strptime(full_date, '%Y-%m-%d_%H:%M:%S'))
         ip = re.search(r'\d+\.\d+\.\d+\.\d+', line).group()
-        ipp.add(ip)
-        ips.append(ip)
+        #ipp.add(ip)
+        #ips.append(ip)
         action = re.search(r'bottom.com/(.*)', line).group(1)
         country = get_country_by_ip(ip)
+        act.ip = ip
         act.country = country
         act.date = full_date
         if action.startswith('pay'):
@@ -112,6 +105,3 @@ with open("logs.txt") as f:
         session.add(act)
         session.commit()
         session.close()
-
-print(session.query(Action).count())
-print(len(ipp))
