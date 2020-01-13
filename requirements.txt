@@ -1,0 +1,4 @@
+Flask
+SQLAlchemy
+SQLAlchemy-Utils
+geoip2
