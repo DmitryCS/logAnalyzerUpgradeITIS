@@ -9,7 +9,7 @@
 > * SQLAlchemy-Utils<br>
 > * geoip2
  <br></b>
-> pip install -r requirements.txt
+> > pip install -r requirements.txt
 3) flask run:<br>
 * Unix Bash (Linux, Mac, etc.):
 > > $ export FLASK_APP=app <br>
